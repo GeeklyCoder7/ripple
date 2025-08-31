@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:ripple/screens/home/home_screen.dart';
+import 'package:ripple/screens/select_files/select_files_screen.dart';
 import 'package:ripple/screens/splash/splash_screen.dart';
+import 'package:ripple/viewmodels/permission_viewmodel.dart';
 
 import 'core/constants/app_colors.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => PermissionViewModel(),
+      child: const MyApp(),
+    )
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -21,8 +29,9 @@ class MyApp extends StatelessWidget {
       // Preload routes for better performance
       initialRoute: '/',
       routes: {
-        '/': (context) => const SplashWavesMoving(),
-        '/home': (context) => const HomeScreen(), // Add explicit route
+        '/': (context) => const HomeScreen(),
+        '/home': (context) => const HomeScreen(),
+        '/select_files': (context) => const SelectFilesScreen(),
       },
     );
   }

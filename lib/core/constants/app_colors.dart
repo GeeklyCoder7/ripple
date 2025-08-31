@@ -61,6 +61,8 @@ class AppColors {
   // OTHER CUSTOM COLORS
   static const utilityButtonsBackground = Color(0xFFECEFF1);
   static const List<Color> appNameTextColor = [AppColors.aquaMist, AppColors.abyssal];
+  static const surfaceLightBackgroundColor = white; //Color(0xFFEFF6FF)
+  static const surfaceDarkBackgroundColor = Color(0xFF26323A);
 
 
   /// Get color based on file extension
@@ -154,7 +156,7 @@ class AppColors {
         onError: white,
         background: lightFoam,
         onBackground: deepGray,
-        surface: white,
+        surface: surfaceLightBackgroundColor,
         onSurface: deepGray,
         surfaceVariant: mistGray,
         onSurfaceVariant: stormGray,
@@ -233,7 +235,7 @@ class AppColors {
         onError: abyssal,
         background: abyssal,
         onBackground: white,
-        surface: deepGray,
+        surface: surfaceDarkBackgroundColor,
         onSurface: white,
         surfaceVariant: stormGray,
         onSurfaceVariant: mistGray,

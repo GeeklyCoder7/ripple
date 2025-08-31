@@ -75,6 +75,13 @@ class AppConstants {
   static const String noFilesSelected = 'No files selected';
   static const String connectionFailed = 'Connection failed';
 
+  // Permission keys constants
+  static const PERMISSION_STORAGE_KEY = 'PERMISSION_STORAGE';
+  static const PERMISSION_MEDIA_IMAGES_KEY = 'PERMISSION_MEDIA_IMAGES';
+  static const PERMISSION_MEDIA_VIDEOS_KEY = 'PERMISSION_MEDIA_VIDEOS';
+  static const PERMISSION_MEDIA_AUDIOS_KEY = 'PERMISSION_MEDIA_AUDIO';
+  static const PERMISSION_LOCATION_KEY = 'PERMISSION_LOCATION';
+
   // Permissions / empty states
   static const String permissionMediaTitle = 'Media Access Needed';
   static const String permissionMediaMessage =

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
+import 'package:ripple/viewmodels/permission_viewmodel.dart';
 
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_constants.dart';
@@ -36,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: GoogleFonts.quicksand(
                       fontSize: AppConstants.fontSizeExtraLarge,
                       fontWeight: FontWeight.w800,
-                      letterSpacing: 6
+                      letterSpacing: 6,
                     ),
                   ),
                 ),
@@ -84,10 +87,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           ),
                           child: InkWell(
-                            onTap: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Send Button Clicked')),
-                              );
+                            onTap: () async {
+                              final permissionViewModel = Provider.of<PermissionViewModel>(context, listen: false);
+                              await permissionViewModel.initializePermissions();
+                              await permissionViewModel.requestAllPermissions();
+                              Navigator.pushNamed(context, '/select_files');
                             },
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
