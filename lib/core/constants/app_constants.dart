@@ -1,3 +1,5 @@
+import 'package:ripple/models/file_system_item.dart';
+
 class AppConstants {
   AppConstants._(); // Private constructor
 
@@ -47,7 +49,7 @@ class AppConstants {
   static const int maxFilesPerTransfer = 50;
   static const Duration defaultTimeout = Duration(seconds: 30);
   static const int maxSelectionCount = 100; // overall selection cap
-  static const int defaultPageSize = 200;   // list chunk size for large folders
+  static const int defaultPageSize = 200; // list chunk size for large folders
 
   // ⏱ DURATIONS
   static const Duration animFast = Duration(milliseconds: 150);
@@ -94,25 +96,53 @@ class AppConstants {
   static const String actionTryAgain = 'Try Again';
 
   static const String emptyFolderTitle = 'This folder is empty';
-  static const String emptyFolderSubtitle = 'Try a different folder or go back.';
+  static const String emptyFolderSubtitle =
+      'Try a different folder or go back.';
   static const String loadingLabel = 'Loading...';
 
   // 📄 FILE FILTERS (extensions)
   static const List<String> allowedImageExtensions = [
-    '.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.heic', '.svg'
+    '.jpg',
+    '.jpeg',
+    '.png',
+    '.gif',
+    '.bmp',
+    '.webp',
+    '.heic',
+    '.svg',
   ];
   static const List<String> allowedVideoExtensions = [
-    '.mp4', '.mov', '.m4v', '.mkv', '.avi', '.webm', '.wmv'
+    '.mp4',
+    '.mov',
+    '.m4v',
+    '.mkv',
+    '.avi',
+    '.webm',
+    '.wmv',
   ];
   static const List<String> allowedAudioExtensions = [
-    '.mp3', '.aac', '.wav', '.flac', '.ogg', '.m4a'
+    '.mp3',
+    '.aac',
+    '.wav',
+    '.flac',
+    '.ogg',
+    '.m4a',
   ];
   static const List<String> allowedDocumentExtensions = [
-    '.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.txt', '.rtf', '.odt'
+    '.pdf',
+    '.doc',
+    '.docx',
+    '.xls',
+    '.xlsx',
+    '.ppt',
+    '.pptx',
+    '.txt',
+    '.rtf',
+    '.odt',
   ];
   static const List<String> allowedApkExtensions = ['.apk'];
 
-  // 🟦 MIME GROUP HELPERS (for quick checks)
+  // MIME GROUP HELPERS (for quick checks)
   static const List<String> mediaExtensions = [
     ...allowedImageExtensions,
     ...allowedVideoExtensions,
@@ -120,8 +150,25 @@ class AppConstants {
   ];
   static const List<String> docExtensions = allowedDocumentExtensions;
 
-  // ♿️ ACCESSIBILITY / SEMANTICS
+  // ACCESSIBILITY CONSTANTS
   static const String semanticsSelectItem = 'Select item';
   static const String semanticsOpenFolder = 'Open folder';
   static const String semanticsBack = 'Back';
+
+  // Helper method to get the file item type based on the extension
+  static FileType getFileTypeFromExtension(String fileExtension) {
+    // It's an image file
+    if (allowedImageExtensions.contains(fileExtension)) {
+      return FileType.image;
+    } else if (allowedVideoExtensions.contains(fileExtension)) {
+      return FileType.video;
+    } else if (allowedAudioExtensions.contains(fileExtension)) {
+      return FileType.audio;
+    } else if (allowedDocumentExtensions.contains(fileExtension)) {
+      return FileType.document;
+    } else if (allowedApkExtensions.contains(fileExtension)) {
+      return FileType.apk;
+    }
+    return FileType.unknown;
+  }
 }

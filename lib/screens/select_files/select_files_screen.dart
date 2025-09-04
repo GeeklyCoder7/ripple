@@ -1,7 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:ripple/viewmodels/permission_viewmodel.dart';
 
 class SelectFilesScreen extends StatefulWidget {
   const SelectFilesScreen({super.key});
@@ -22,14 +19,12 @@ class _SelectFilesScreenState extends State<SelectFilesScreen> {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
-            'Select Files'
-          ),
+          title: Text('Select Files'),
           bottom: TabBar(
             tabs: [
-              Tab(text: 'Documents',),
-              Tab(text: 'Install Apk',),
-              Tab(text: 'Media',),
+              Tab(text: 'Documents'),
+              Tab(text: 'Install Apk'),
+              Tab(text: 'Media'),
             ],
           ),
         ),
@@ -37,9 +32,9 @@ class _SelectFilesScreenState extends State<SelectFilesScreen> {
           padding: EdgeInsets.all(8.0),
           child: TabBarView(
             children: [
-              Center(child: Text('Documents content',),),
-              Center(child: Text('Installed apps content',),),
-              Center(child: Text('Media content',),),
+              Center(child: Text('Documents content')),
+              Center(child: Text('Installed apps content')),
+              Center(child: Text('Media content')),
             ],
           ),
         ),
