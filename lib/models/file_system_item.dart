@@ -1,4 +1,15 @@
-enum FileType { apk, document, image, video, audio, unknown }
+enum FileType {
+  apk,
+  image,
+  video,
+  audio,
+  pdf,
+  word,
+  excel,
+  powerpoint,
+  text,
+  unknown,
+}
 
 enum FileSystemItemType { file, folder }
 

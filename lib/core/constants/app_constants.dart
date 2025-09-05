@@ -1,3 +1,7 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:icons_plus/icons_plus.dart';
+import 'package:ripple/core/constants/app_colors.dart';
 import 'package:ripple/models/file_system_item.dart';
 
 class AppConstants {
@@ -23,6 +27,9 @@ class AppConstants {
   static const double paddingLarge = 24.0;
   static const double paddingXLarge = 32.0;
 
+  // CARD PROPERTIES
+  static const double cardElevation = 1;
+
   // 📐 SIZES & RADIUS
   static const double iconSizeSmall = 16.0;
   static const double iconSizeMedium = 24.0;
@@ -31,12 +38,12 @@ class AppConstants {
 
   static const double buttonHeight = 48.0;
   static const double inputHeight = 56.0;
-  static const double cardElevation = 4.0;
   static const double borderRadius = 12.0;
 
   static const double borderRadiusLarge = 100.0;
   static const double borderRadiusMedium = 25.0;
   static const double borderRadiusSmall = 10.0;
+  static const double borderRadiusExtraSmall = 5.0;
 
   static const double fontSizeSmall = 16.0;
   static const double fontSizeMedium = 20.0;
@@ -155,6 +162,11 @@ class AppConstants {
   static const String semanticsOpenFolder = 'Open folder';
   static const String semanticsBack = 'Back';
 
+  // FILE SIZE THRESHOLD CONSTANTS
+  static const int bytesToKB = 1024;
+  static const int bytesToMB = 1024 * 1024;
+  static const int bytesToGB = 1024 * 1024 * 1024;
+
   // Helper method to get the file item type based on the extension
   static FileType getFileTypeFromExtension(String fileExtension) {
     // It's an image file
@@ -165,10 +177,97 @@ class AppConstants {
     } else if (allowedAudioExtensions.contains(fileExtension)) {
       return FileType.audio;
     } else if (allowedDocumentExtensions.contains(fileExtension)) {
-      return FileType.document;
+      // Check specific document types
+      switch (fileExtension) {
+        case '.pdf':
+          return FileType.pdf;
+        case '.doc':
+        case '.docx':
+          return FileType.word;
+        case '.ppt':
+        case '.pptx':
+          return FileType.powerpoint;
+        case '.xls':
+        case '.xlsx':
+          return FileType.excel;
+        case '.txt':
+          return FileType.text;
+        default:
+          return FileType.unknown;
+      }
     } else if (allowedApkExtensions.contains(fileExtension)) {
       return FileType.apk;
     }
     return FileType.unknown;
+  }
+
+  // FILE AND FOLDER ICON CONSTANTS
+  static const IconData folderIcon = FontAwesome.folder_open;
+  static const IconData pdfIcon = FontAwesome.file_pdf_solid;
+  static const IconData docIcon = Icons.description_rounded;
+  static const IconData docxIcon = Icons.description_rounded;
+  static const IconData xlsIcon = Icons.table_chart;
+  static const IconData xlsxIcon = Icons.table_chart;
+  static const IconData pptIcon = FontAwesome.file_powerpoint_solid;
+  static const IconData pptxIcons = FontAwesome.file_powerpoint_solid;
+  static const IconData txtIcon = Icons.article;
+  static const IconData imageIcon = FontAwesome.file_image_solid;
+  static const IconData videoIcon = FontAwesome.file_video_solid;
+  static const IconData audioIcon = FontAwesome.file_audio_solid;
+  static const IconData apkIcon = Bootstrap.android2;
+  static const IconData defaultIcon = CupertinoIcons.doc_fill;
+
+  // Helper method for getting specific file icon
+  static IconData getIconFromFileType(FileType fileType) {
+    switch (fileType) {
+      case FileType.image:
+        return imageIcon;
+      case FileType.video:
+        return videoIcon;
+      case FileType.audio:
+        return audioIcon;
+      case FileType.apk:
+        return apkIcon;
+      case FileType.word:
+        return docIcon;
+      case FileType.pdf:
+        return pdfIcon;
+      case FileType.text:
+        return txtIcon;
+      case FileType.powerpoint:
+        return pptIcon;
+      case FileType.excel:
+        return xlsIcon;
+      case FileType.unknown:
+      default:
+        return Icons.insert_drive_file;
+    }
+  }
+
+  // Helper method to get color from the file type
+  static Color getColorFromFileType(FileType fileType) {
+    switch (fileType) {
+      case FileType.image:
+        return AppColors.imageColor;
+      case FileType.video:
+        return AppColors.videoColor;
+      case FileType.audio:
+        return AppColors.fileAudio;
+      case FileType.apk:
+        return AppColors.apkColor;
+      case FileType.excel:
+        return AppColors.xlsColor;
+      case FileType.powerpoint:
+        return AppColors.pptColor;
+      case FileType.text:
+        return AppColors.txtColor;
+      case FileType.word:
+        return AppColors.docColor;
+      case FileType.pdf:
+        return AppColors.pdfColor;
+      case FileType.unknown:
+      default:
+        return AppColors.unknownColor;
+    }
   }
 }

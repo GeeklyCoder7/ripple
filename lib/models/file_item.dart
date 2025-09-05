@@ -24,9 +24,22 @@ class FileItem extends FileSystemItem {
       itemName: _getFileName(file.path),
       itemPath: file.path,
       fileSizeBytes: getFileSizeBytes(file),
-      fileExtension: getFileExtension(file.path),
+      fileExtension: fileExtension,
       fileType: _getFileType(fileExtension),
     );
+  }
+
+  // Getter for formatted readable file size
+  String get formattedFileSize {
+    if (fileSizeBytes < 1024) {
+      return '$fileSizeBytes bytes';
+    } else if (fileSizeBytes < 1024 * 1024) {
+      return '${(fileSizeBytes / AppConstants.bytesToKB).toStringAsFixed(2)} KB';
+    } else if (fileSizeBytes < 1024 * 1024 * 1024) {
+      return '${(fileSizeBytes / AppConstants.bytesToMB).toStringAsFixed(2)} MB';
+    } else {
+      return '${(fileSizeBytes / AppConstants.bytesToGB).toStringAsFixed(2)} GB';
+    }
   }
 
   // Helper method for getting file name
