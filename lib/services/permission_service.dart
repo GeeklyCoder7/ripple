@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:ripple/core/constants/app_constants.dart';
 import 'package:ripple/models/permission_status.dart';
@@ -75,103 +76,119 @@ class PermissionService {
 
   // Get all storage permissions (not location) status based on android version
   Future<Map<String, AppPermissionStatus>> checkAllStoragePermissions() async {
-    final Map<String, AppPermissionStatus> results = {};
+    Map<String, AppPermissionStatus> results = {};
 
     if (Platform.isAndroid) {
-      final androidVersion = await _getAndroidVersion();
-      if (androidVersion >= 33) {
-        // Request granular permissions
+      final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      final AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      final int androidVersion = int.parse(androidInfo.version.release);
+
+      if (androidVersion >= 13) {
+        // Check Android 13+ permissions
         results[AppConstants.PERMISSION_MEDIA_IMAGES_KEY] =
-            await getCurrentPermissionStatus(Permission.photos);
+            _convertToAppPermissionStatus(await Permission.photos.status);
         results[AppConstants.PERMISSION_MEDIA_VIDEOS_KEY] =
-            await getCurrentPermissionStatus(Permission.videos);
+            _convertToAppPermissionStatus(await Permission.videos.status);
         results[AppConstants.PERMISSION_MEDIA_AUDIOS_KEY] =
-            await getCurrentPermissionStatus(Permission.audio);
-        results[AppConstants.PERMISSION_STORAGE_KEY] = AppPermissionStatus
-            .granted; // No need to request storage for android 13 and above
-      } else {
-        // Request broad storage permissions
+            _convertToAppPermissionStatus(await Permission.audio.status);
         results[AppConstants.PERMISSION_STORAGE_KEY] =
-            await getCurrentPermissionStatus(Permission.storage);
-        // On version above 13, only storage request is required and all others come withing that permission
-        results[AppConstants.PERMISSION_MEDIA_IMAGES_KEY] =
-            results[AppConstants.PERMISSION_STORAGE_KEY]!;
-        results[AppConstants.PERMISSION_MEDIA_VIDEOS_KEY] =
-            results[AppConstants.PERMISSION_STORAGE_KEY]!;
-        results[AppConstants.PERMISSION_MEDIA_AUDIOS_KEY] =
-            results[AppConstants.PERMISSION_STORAGE_KEY]!;
+            _convertToAppPermissionStatus(
+              await Permission.manageExternalStorage.status,
+            );
+      } else {
+        // Check Android 12 and below
+        AppPermissionStatus storageStatus = _convertToAppPermissionStatus(
+          await Permission.storage.status,
+        );
+        results[AppConstants.PERMISSION_STORAGE_KEY] = storageStatus;
+        results[AppConstants.PERMISSION_MEDIA_IMAGES_KEY] = storageStatus;
+        results[AppConstants.PERMISSION_MEDIA_VIDEOS_KEY] = storageStatus;
+        results[AppConstants.PERMISSION_MEDIA_AUDIOS_KEY] = storageStatus;
       }
-    } else if (Platform.isIOS) {
-      // IOS just needs the Photos permission
-      results[AppConstants.PERMISSION_MEDIA_IMAGES_KEY] =
-          await getCurrentPermissionStatus(Permission.photos);
-      // Other media like videos and audio come along with images
-      results[AppConstants.PERMISSION_MEDIA_VIDEOS_KEY] =
-          results[AppConstants.PERMISSION_MEDIA_IMAGES_KEY]!;
-      results[AppConstants.PERMISSION_MEDIA_AUDIOS_KEY] =
-          results[AppConstants.PERMISSION_MEDIA_IMAGES_KEY]!;
+    } else {
+      // iOS
       results[AppConstants.PERMISSION_STORAGE_KEY] =
-          AppPermissionStatus.granted; // No need for storage permission on IOS
+          AppPermissionStatus.granted;
+      results[AppConstants.PERMISSION_MEDIA_IMAGES_KEY] =
+          AppPermissionStatus.granted;
+      results[AppConstants.PERMISSION_MEDIA_VIDEOS_KEY] =
+          AppPermissionStatus.granted;
+      results[AppConstants.PERMISSION_MEDIA_AUDIOS_KEY] =
+          AppPermissionStatus.granted;
+    }
+
+    return results;
+  }
+
+  Future<Map<String, AppPermissionStatus>> requestStoragePermissions() async {
+    Map<String, AppPermissionStatus> results = {};
+
+    if (Platform.isAndroid) {
+      final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      final AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      final int androidVersion = int.parse(androidInfo.version.release);
+
+      if (androidVersion >= 13) {
+        // Android 13+ granular permissions
+        Map<Permission, PermissionStatus> statuses = await [
+          Permission.photos,
+          Permission.videos,
+          Permission.audio,
+          Permission.manageExternalStorage,
+        ].request();
+
+        // Convert to your custom AppPermissionStatus
+        results[AppConstants.PERMISSION_MEDIA_IMAGES_KEY] =
+            _convertToAppPermissionStatus(statuses[Permission.photos]!);
+        results[AppConstants.PERMISSION_MEDIA_VIDEOS_KEY] =
+            _convertToAppPermissionStatus(statuses[Permission.videos]!);
+        results[AppConstants.PERMISSION_MEDIA_AUDIOS_KEY] =
+            _convertToAppPermissionStatus(statuses[Permission.audio]!);
+        results[AppConstants.PERMISSION_STORAGE_KEY] =
+            _convertToAppPermissionStatus(
+              statuses[Permission.manageExternalStorage]!,
+            );
+      } else {
+        // Android 12 and below
+        PermissionStatus storageStatus = await Permission.storage.request();
+        AppPermissionStatus appStatus = _convertToAppPermissionStatus(
+          storageStatus,
+        );
+
+        // Set all storage-related permissions to the same status for older Android
+        results[AppConstants.PERMISSION_STORAGE_KEY] = appStatus;
+        results[AppConstants.PERMISSION_MEDIA_IMAGES_KEY] = appStatus;
+        results[AppConstants.PERMISSION_MEDIA_VIDEOS_KEY] = appStatus;
+        results[AppConstants.PERMISSION_MEDIA_AUDIOS_KEY] = appStatus;
+      }
+    } else {
+      // iOS - set all as granted (iOS doesn't need explicit storage permissions)
+      results[AppConstants.PERMISSION_STORAGE_KEY] =
+          AppPermissionStatus.granted;
+      results[AppConstants.PERMISSION_MEDIA_IMAGES_KEY] =
+          AppPermissionStatus.granted;
+      results[AppConstants.PERMISSION_MEDIA_VIDEOS_KEY] =
+          AppPermissionStatus.granted;
+      results[AppConstants.PERMISSION_MEDIA_AUDIOS_KEY] =
+          AppPermissionStatus.granted;
     }
     return results;
   }
 
-  // Request just the storage permissions (not location) based on the Android version
-  Future<Map<String, AppPermissionStatus>> requestStoragePermissions() async {
-    final Map<String, AppPermissionStatus> results = {};
-
-    if (Platform.isAndroid) {
-      final androidVersion = await _getAndroidVersion();
-
-      if (androidVersion >= 33) {
-        // If version is >=33 request granular permissions
-        results[AppConstants.PERMISSION_MEDIA_IMAGES_KEY] =
-            await requestPermission(
-              Permission.photos,
-              AppConstants.PERMISSION_MEDIA_IMAGES_KEY,
-            );
-        results[AppConstants.PERMISSION_MEDIA_VIDEOS_KEY] =
-            await requestPermission(
-              Permission.videos,
-              AppConstants.PERMISSION_MEDIA_VIDEOS_KEY,
-            );
-        results[AppConstants.PERMISSION_MEDIA_AUDIOS_KEY] =
-            await requestPermission(
-              Permission.audio,
-              AppConstants.PERMISSION_MEDIA_AUDIOS_KEY,
-            );
-        results[AppConstants.PERMISSION_STORAGE_KEY] = AppPermissionStatus
-            .granted; // No need to ask for storage permission for version 13 and above
-      } else {
-        // Else request broad storage permissions (only storage permission required)
-        results[AppConstants.PERMISSION_STORAGE_KEY] = await requestPermission(
-          Permission.storage,
-          AppConstants.PERMISSION_STORAGE_KEY,
-        );
-        // Others are not required as they come along with the storage
-        results[AppConstants.PERMISSION_MEDIA_IMAGES_KEY] =
-            results[AppConstants.PERMISSION_STORAGE_KEY]!;
-        results[AppConstants.PERMISSION_MEDIA_VIDEOS_KEY] =
-            results[AppConstants.PERMISSION_STORAGE_KEY]!;
-        results[AppConstants.PERMISSION_MEDIA_AUDIOS_KEY] =
-            results[AppConstants.PERMISSION_STORAGE_KEY]!;
-      }
-    } else if (Platform.isIOS) {
-      // Only request photos and other media like videos and audio come along with it
-      results[AppConstants.PERMISSION_MEDIA_IMAGES_KEY] =
-          await requestPermission(
-            Permission.photos,
-            AppConstants.PERMISSION_MEDIA_IMAGES_KEY,
-          );
-      results[AppConstants.PERMISSION_MEDIA_VIDEOS_KEY] =
-          results[AppConstants.PERMISSION_MEDIA_IMAGES_KEY]!;
-      results[AppConstants.PERMISSION_MEDIA_AUDIOS_KEY] =
-          results[AppConstants.PERMISSION_MEDIA_IMAGES_KEY]!;
-      // Doesn't need to request the storage permission
-      results[AppConstants.PERMISSION_STORAGE_KEY] =
-          AppPermissionStatus.granted;
+  // Helper method to convert PermissionStatus to AppPermissionStatus
+  AppPermissionStatus _convertToAppPermissionStatus(PermissionStatus status) {
+    switch (status) {
+      case PermissionStatus.granted:
+        return AppPermissionStatus.granted;
+      case PermissionStatus.denied:
+        return AppPermissionStatus.denied;
+      case PermissionStatus.permanentlyDenied:
+        return AppPermissionStatus.permanentlyDenied;
+      case PermissionStatus.restricted:
+        return AppPermissionStatus.denied; // Treat restricted as denied
+      default:
+        return AppPermissionStatus.notDetermined;
     }
-    return results;
   }
 
   // Check location permission
@@ -199,18 +216,5 @@ class PermissionService {
   // Open app settings for manually giving the permission
   Future<bool> navigateToAppSettings() async {
     return await openAppSettings();
-  }
-
-  // Helper method to find the android version of the device
-  Future<int> _getAndroidVersion() async {
-    if (Platform.isAndroid) {
-      try {
-        final photoStatus = await Permission.photos.status;
-        return 33; // If we can check photos status we are on version 13+
-      } catch (e) {
-        return 29; // If some error occurs while checking the status, we are below version 13.
-      }
-    }
-    return 0;
   }
 }

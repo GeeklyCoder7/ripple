@@ -19,7 +19,7 @@ class _SelectFilesScreenState extends State<SelectFilesScreen> {
   @override
   void initState() {
     super.initState();
-    _filesList = SelectFilesService().getFolderContents(AppConstants.defaultStoragePath);
+    _filesList = SelectFilesService().getFolderContents(AppConstants.testingPath);
   }
 
   @override

@@ -95,6 +95,7 @@ class AppConstants {
 
   // COMMON STORAGE PATHS CONSTANTS
   static const String defaultStoragePath = '/storage/emulated/0';
+  static const String testingPath = '/storage/emulated/0/Podcasts';
   static const String downloadsPath = '/storage/emulated/0/Download';
   static const String documentsPath = '/storage/emulated/0/Documents';
   static const String picturesPath = '/storage/emulated/0/Pictures';
