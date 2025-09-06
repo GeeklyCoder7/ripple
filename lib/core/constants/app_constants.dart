@@ -90,6 +90,43 @@ class AppConstants {
   static const PERMISSION_MEDIA_VIDEOS_KEY = 'PERMISSION_MEDIA_VIDEOS';
   static const PERMISSION_MEDIA_AUDIOS_KEY = 'PERMISSION_MEDIA_AUDIO';
   static const PERMISSION_LOCATION_KEY = 'PERMISSION_LOCATION';
+  static const PERMISSION_MANAGE_EXTERNAL_STORAGE_KEY =
+      'PERMISSION_MANAGE_EXTERNAL_STORAGE';
+
+  // COMMON STORAGE PATHS CONSTANTS
+  static const String defaultStoragePath = '/storage/emulated/0';
+  static const String downloadsPath = '/storage/emulated/0/Download';
+  static const String documentsPath = '/storage/emulated/0/Documents';
+  static const String picturesPath = '/storage/emulated/0/Pictures';
+  static const String moviesPath = '/storage/emulated/0/Movies';
+  static const String musicPath = '/storage/emulated/0/Music';
+  static const String dcimPath = '/storage/emulated/0/DCIM';
+
+  // HELPER METHOD TO GET ALL COMMON STORAGE DIRECTORIES
+  static List<String> getAllCommonDirs() {
+    return [
+      defaultStoragePath,
+      downloadsPath,
+      documentsPath,
+      picturesPath,
+      moviesPath,
+      musicPath,
+      dcimPath,
+    ];
+  }
+
+  // FILE SYSTEM ERROR MESSAGES CONSTANTS
+  static const String errorLoadingFolder = 'Error loading folder';
+  static const String errorPermissionDenied = 'Storage permission denied';
+  static const String errorDirectoryNotFound = 'Directory not found';
+  static const String errorDirectoryNotAccessible = 'Directory not accessible';
+  static const String errorUnknownFileSystemError = 'Unknown file system error';
+
+  // NAVIGATION AND BREADCRUMB CONSTANTS
+  static const String rootFolderName = 'Internal Storage';
+  static const String backButtonLabel = 'Back';
+  static const String upOneLevelLabel = 'Up one level';
+  static const String homeFolderLabel = 'Home';
 
   // Permissions / empty states
   static const String permissionMediaTitle = 'Media Access Needed';

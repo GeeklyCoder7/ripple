@@ -16,6 +16,14 @@ class FileSystemItemTile extends StatefulWidget {
 
 class _FileSystemItemTileState extends State<FileSystemItemTile> {
   bool? checkState = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print('item type: ${widget.item.itemType}');
+    print('item name: ${widget.item.displayName}');
+  }
   @override
   Widget build(BuildContext context) {
     IconData iconData;

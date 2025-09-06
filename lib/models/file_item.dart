@@ -32,12 +32,16 @@ class FileItem extends FileSystemItem {
   // Getter for formatted readable file size
   String get formattedFileSize {
     if (fileSizeBytes < 1024) {
+      // Size is in bytes
       return '$fileSizeBytes bytes';
     } else if (fileSizeBytes < 1024 * 1024) {
+      // Size is in KB
       return '${(fileSizeBytes / AppConstants.bytesToKB).toStringAsFixed(2)} KB';
     } else if (fileSizeBytes < 1024 * 1024 * 1024) {
+      // Size is in MB
       return '${(fileSizeBytes / AppConstants.bytesToMB).toStringAsFixed(2)} MB';
     } else {
+      // Size is in GB
       return '${(fileSizeBytes / AppConstants.bytesToGB).toStringAsFixed(2)} GB';
     }
   }

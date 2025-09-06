@@ -5,11 +5,15 @@ import 'package:ripple/models/folder_item.dart';
 
 class SelectFilesService {
   // Method to get the folder contents for the documents tab
-  List<FileSystemItem> getFolderContents(String path) {
+  Future<List<FileSystemItem>> getFolderContents(String path) async {
     List<FileSystemItem> folderContentsList = [];
     try {
       Directory directory = Directory(path); // Current directory from path
-      for (FileSystemEntity folderItem in directory.listSync()) {
+      if (!await directory.exists()) {
+        print('Directory does not exists: $path');
+        return folderContentsList;
+      }
+      await for (FileSystemEntity folderItem in directory.list()) {
         if (folderItem is File) {
           FileItem item = FileItem.fromFile(folderItem);
           folderContentsList.add(item);
@@ -23,5 +27,4 @@ class SelectFilesService {
     }
     return folderContentsList;
   }
-
 }
