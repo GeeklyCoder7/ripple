@@ -54,6 +54,8 @@ class FolderItem extends FileSystemItem {
     }
   }
 
+
+
   // Factory method to create FolderItem from Directory
   factory FolderItem.fromDirectory(Directory directory) {
     return FolderItem(

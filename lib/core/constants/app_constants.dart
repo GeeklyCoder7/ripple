@@ -10,7 +10,7 @@ class AppConstants {
   // 📱 APP INFO
   static const String appName = 'Ripple';
   static const String appVersion = '1.0.0';
-  static const String appDescription = 'Make Every Transfer Matter.';
+  static const String appDescription = 'Make Every Transfer Matter';
 
   // 🧭 ROUTES
   static const String routeHome = '/home';
@@ -102,6 +102,12 @@ class AppConstants {
   static const String moviesPath = '/storage/emulated/0/Movies';
   static const String musicPath = '/storage/emulated/0/Music';
   static const String dcimPath = '/storage/emulated/0/DCIM';
+
+  // RESTRICTED PATHS
+  static const List<String> restrictedPaths = [
+    '/storage/emulated/0/Android/data',
+    '/storage/emulated/0/Android/obb',
+  ];
 
   // HELPER METHOD TO GET ALL COMMON STORAGE DIRECTORIES
   static List<String> getAllCommonDirs() {

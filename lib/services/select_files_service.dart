@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
+import 'package:ripple/core/constants/app_constants.dart';
 import 'package:ripple/models/file_item.dart';
 import 'package:ripple/models/file_system_item.dart';
 import 'package:ripple/models/folder_item.dart';
@@ -6,11 +8,18 @@ import 'package:ripple/models/folder_item.dart';
 class SelectFilesService {
   // Method to get the folder contents for the documents tab
   Future<List<FileSystemItem>> getFolderContents(String path) async {
+    final restrictedPaths = [
+      '/storage/emulated/0/Android/data',
+      '/storage/emulated/0/Android/obb',
+    ];
+
     List<FileSystemItem> folderContentsList = [];
     try {
       Directory directory = Directory(path); // Current directory from path
       if (!await directory.exists()) {
-        print('Directory does not exists: $path');
+        if (kDebugMode) {
+          print('Directory does not exists: $path');
+        }
         return folderContentsList;
       }
       await for (FileSystemEntity folderItem in directory.list()) {
@@ -18,22 +27,14 @@ class SelectFilesService {
           FileItem item = FileItem.fromFile(folderItem);
           folderContentsList.add(item);
         } else if (folderItem is Directory) {
+          if (restrictedPaths.contains(folderItem.path)) {
+            continue;
+          }
           FolderItem item = FolderItem.fromDirectory(folderItem);
           if (!item.itemName.startsWith('.')) {
             folderContentsList.add(item);
           }
         }
-      }
-
-      for (final item in folderContentsList) {
-        late FileItem fileItem;
-        if (item.itemType == FileSystemItemType.file) {
-          fileItem = item as FileItem;
-          print(
-            "kuch to hai: ${fileItem.itemName} ${fileItem.itemType} ${fileItem.fileExtension}",
-          );
-        }
-        print("kuch to hai: ${item.itemName} ${item.itemType}");
       }
       // Sort the list as folders first and that too in alphabetical order and then files
       folderContentsList.sort((a, b) {
@@ -52,7 +53,11 @@ class SelectFilesService {
         }
         return 0;
       });
-    } catch (e) {}
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error getting folder contents through service class: $e');
+      }
+    }
     return folderContentsList;
   }
 }
