@@ -22,7 +22,7 @@ class FilesListTab extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                breadCrumbText(viewmodel.breadcrumbPaths),
+                breadCrumbText(breadcrumbPaths: viewmodel.breadcrumbPaths),
                 const Spacer(),
                 Center(child: const Text('No items')),
                 const Spacer(),
@@ -32,9 +32,10 @@ class FilesListTab extends StatelessWidget {
         }
 
         return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Breadcrumb text
-            breadCrumbText(viewmodel.breadcrumbPaths),
+            breadCrumbText(breadcrumbPaths: viewmodel.breadcrumbPaths),
 
             Expanded(
               child: ListView.builder(

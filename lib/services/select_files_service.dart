@@ -30,7 +30,11 @@ class SelectFilesService {
           if (restrictedPaths.contains(folderItem.path)) {
             continue;
           }
+          // Create folder item and also check it's item count. if < 1, don't add to the list
           FolderItem item = FolderItem.fromDirectory(folderItem);
+          if (item.itemCount < 1) {
+            continue;
+          }
           if (!item.itemName.startsWith('.')) {
             folderContentsList.add(item);
           }

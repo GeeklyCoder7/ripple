@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ripple/core/constants/app_constants.dart';
 import 'package:ripple/screens/select_files/tabs/files_list_tab.dart';
-import 'package:ripple/services/select_files_service.dart';
 import 'package:ripple/viewmodels/select_files_viewmodel.dart';
-import 'package:ripple/widgets/file_system_item_tile.dart';
-import '../../models/file_system_item.dart';
+
+import '../../core/constants/app_colors.dart';
 
 class SelectFilesScreen extends StatefulWidget {
   const SelectFilesScreen({super.key});
@@ -42,11 +42,38 @@ class _SelectFilesScreenState extends State<SelectFilesScreen> {
             child: Scaffold(
               appBar: AppBar(
                 title: const Text('Select Files'),
-                bottom: const TabBar(
+                bottom: TabBar(
                   tabs: [
-                    Tab(text: 'Documents'),
-                    Tab(text: 'Install Apk'),
-                    Tab(text: 'Media'),
+                    Tab(
+                      child: Text(
+                        'Documents',
+                        style: GoogleFonts.quicksand(
+                          color: AppColors.white,
+                          fontSize: AppConstants.fontSizeSmall,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    Tab(
+                      child: Text(
+                        'Media',
+                        style: GoogleFonts.quicksand(
+                          color: AppColors.white,
+                          fontSize: AppConstants.fontSizeSmall,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    Tab(
+                      child: Text(
+                        'Apk',
+                        style: GoogleFonts.quicksand(
+                          color: AppColors.white,
+                          fontSize: AppConstants.fontSizeSmall,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),

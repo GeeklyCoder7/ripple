@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ripple/widgets/path_breadcrumb.dart';
 
 /// Custom color palette for ShareWave - Ocean & Wave inspired theme
 class AppColors {
@@ -119,6 +120,7 @@ class AppColors {
   static const surfaceLightBackgroundColor = white; //Color(0xFFEFF6FF)
   static const surfaceDarkBackgroundColor = Color(0xFF26323A);
   static const itemPropertiesTextColor = Color(0xfd464646);
+  static const breadCrumbTextColor = waveBlue;
 
   // ICONS COLOR CONSTANTS
   static const Color pdfColor = Color(0xFFDC2626); // Red
@@ -131,8 +133,6 @@ class AppColors {
   static const Color apkColor = Color(0xFF059669); // Emerald
   static const Color folderColor = Color(0xFFD97706); // Amber
   static const Color unknownColor = Color(0xFF9CA3AF); // Light Gray
-
-  /// Get color based on file extension
 
   /// Get gradient based on context
   static LinearGradient getWaveGradient({
