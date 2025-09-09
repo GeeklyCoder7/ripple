@@ -5,7 +5,7 @@ import 'package:ripple/models/file_item.dart';
 import 'package:ripple/models/file_system_item.dart';
 import 'package:ripple/models/folder_item.dart';
 
-class SelectFilesService {
+class FetchFolderItemsService {
   // Method to get the folder contents for the documents tab
   Future<List<FileSystemItem>> getFolderContents(String path) async {
     final restrictedPaths = [

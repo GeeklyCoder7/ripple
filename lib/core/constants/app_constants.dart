@@ -93,7 +93,7 @@ class AppConstants {
   static const PERMISSION_MANAGE_EXTERNAL_STORAGE_KEY =
       'PERMISSION_MANAGE_EXTERNAL_STORAGE';
 
-  // COMMON STORAGE PATHS CONSTANTS
+  // COMMON STORAGE PATHS CONSTANT
   static const String defaultStoragePath = '/storage/emulated/0';
   static const String testingPath = '/storage/emulated/0/Podcasts';
   static const String downloadsPath = '/storage/emulated/0/Download';
@@ -210,6 +210,23 @@ class AppConstants {
   static const int bytesToKB = 1024;
   static const int bytesToMB = 1024 * 1024;
   static const int bytesToGB = 1024 * 1024 * 1024;
+
+  // Helper method for getting formatted readable file size
+  static String getFormattedFileSize(int fileSizeBytes) {
+    if (fileSizeBytes < 1024) {
+      // Size is in bytes
+      return '$fileSizeBytes bytes';
+    } else if (fileSizeBytes < 1024 * 1024) {
+      // Size is in KB
+      return '${(fileSizeBytes / AppConstants.bytesToKB).toStringAsFixed(2)} KB';
+    } else if (fileSizeBytes < 1024 * 1024 * 1024) {
+      // Size is in MB
+      return '${(fileSizeBytes / AppConstants.bytesToMB).toStringAsFixed(2)} MB';
+    } else {
+      // Size is in GB
+      return '${(fileSizeBytes / AppConstants.bytesToGB).toStringAsFixed(2)} GB';
+    }
+  }
 
   // Helper method to get the file item type based on the extension
   static FileType getFileTypeFromExtension(String fileExtension) {

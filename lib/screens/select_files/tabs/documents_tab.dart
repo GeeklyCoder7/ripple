@@ -1,17 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ripple/models/folder_item.dart';
-import 'package:ripple/viewmodels/select_files_viewmodel.dart';
+import 'package:ripple/viewmodels/fetch_folder_items_viewmodel.dart';
 import 'package:ripple/widgets/file_system_item_tile.dart';
 import 'package:ripple/widgets/path_breadcrumb.dart';
 
-class FilesListTab extends StatelessWidget {
-  const FilesListTab({super.key});
+class DocumentsTab extends StatelessWidget {
+  const DocumentsTab({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SelectFilesViewModel>(
+    return Consumer<FetchFolderItemsViewModel>(
       builder: (context, viewmodel, child) {
         if (viewmodel.isLoading) {
           return Center(child: CircularProgressIndicator());

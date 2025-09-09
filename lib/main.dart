@@ -4,7 +4,7 @@ import 'package:ripple/screens/home/home_screen.dart';
 import 'package:ripple/screens/select_files/select_files_screen.dart';
 import 'package:ripple/screens/splash/splash_screen.dart';
 import 'package:ripple/viewmodels/permission_viewmodel.dart';
-import 'package:ripple/viewmodels/select_files_viewmodel.dart';
+import 'package:ripple/viewmodels/fetch_folder_items_viewmodel.dart';
 
 import 'core/constants/app_colors.dart';
 
@@ -13,7 +13,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => PermissionViewModel()),
-        ChangeNotifierProvider(create: (_) => SelectFilesViewModel()),
+        ChangeNotifierProvider(create: (_) => FetchFolderItemsViewModel()),
       ],
       child: const MyApp(),
     ),

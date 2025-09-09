@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ripple/core/constants/app_constants.dart';
-import 'package:ripple/screens/select_files/tabs/files_list_tab.dart';
-import 'package:ripple/viewmodels/select_files_viewmodel.dart';
+import 'package:ripple/screens/select_files/tabs/documents_tab.dart';
+import 'package:ripple/viewmodels/fetch_folder_items_viewmodel.dart';
 
 import '../../core/constants/app_colors.dart';
 
@@ -19,7 +19,7 @@ class _SelectFilesScreenState extends State<SelectFilesScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<SelectFilesViewModel>().loadFolder(
+      context.read<FetchFolderItemsViewModel>().loadFolder(
         AppConstants.defaultStoragePath,
       );
     });
@@ -27,7 +27,7 @@ class _SelectFilesScreenState extends State<SelectFilesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SelectFilesViewModel>(
+    return Consumer<FetchFolderItemsViewModel>(
       builder: (context, viewmodel, child) {
         return WillPopScope(
           onWillPop: () async {
@@ -81,7 +81,7 @@ class _SelectFilesScreenState extends State<SelectFilesScreen> {
                 padding: EdgeInsets.all(8.0),
                 child: TabBarView(
                   children: [
-                    FilesListTab(),
+                    DocumentsTab(),
                     Center(child: Text('Installed apps content')),
                     Center(child: Text('Media content')),
                   ],

@@ -72,7 +72,7 @@ class _FileSystemItemTileState extends State<FileSystemItemTile> {
                     widget.item.isFile
                         ? Text(
                             // Item is file
-                            (widget.item as FileItem).formattedFileSize,
+                            AppConstants.getFormattedFileSize((widget.item as FileItem).fileSizeBytes),
                             style: const TextStyle(
                               color: AppColors.itemPropertiesTextColor,
                               fontWeight: FontWeight.w500,

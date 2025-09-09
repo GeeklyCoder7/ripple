@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:ripple/core/constants/app_colors.dart';
 
 import '../core/constants/app_constants.dart';
-import '../viewmodels/select_files_viewmodel.dart';
+import '../viewmodels/fetch_folder_items_viewmodel.dart';
 
 class breadCrumbText extends StatefulWidget {
   final List<String> breadcrumbPaths;
@@ -55,7 +55,7 @@ class _breadCrumbTextState extends State<breadCrumbText> {
                     onTap: () async {
                       String targetPath =
                           '/${widget.breadcrumbPaths.sublist(0, index + 1).join('/')}';
-                      await context.read<SelectFilesViewModel>().loadFolder(
+                      await context.read<FetchFolderItemsViewModel>().loadFolder(
                         targetPath,
                       );
                     },

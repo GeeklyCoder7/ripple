@@ -2,13 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:ripple/core/constants/app_constants.dart';
 import 'package:ripple/models/file_system_item.dart';
-import 'package:ripple/services/select_files_service.dart';
+import 'package:ripple/services/fetch_folder_items_service.dart';
 
-class SelectFilesViewModel extends ChangeNotifier {
+class FetchFolderItemsViewModel extends ChangeNotifier {
   bool isLoading = false;
   List<FileSystemItem> folderContentsList = [];
   String? currentPath;
-  SelectFilesService selectFilesService = SelectFilesService();
+  FetchFolderItemsService selectFilesService = FetchFolderItemsService();
 
   // Method to fetch and load current folder items
   Future<void> loadFolder(String path) async {
