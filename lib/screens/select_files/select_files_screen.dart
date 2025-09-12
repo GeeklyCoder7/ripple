@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:ripple/core/constants/app_constants.dart';
 import 'package:ripple/screens/select_files/tabs/installed_apps_tab.dart';
 import 'package:ripple/screens/select_files/tabs/documents_tab.dart';
+import 'package:ripple/viewmodels/fetch_apk_viewmodel.dart';
 import 'package:ripple/viewmodels/fetch_folder_items_viewmodel.dart';
 
 import '../../core/constants/app_colors.dart';
@@ -16,16 +17,6 @@ class SelectFilesScreen extends StatefulWidget {
 }
 
 class _SelectFilesScreenState extends State<SelectFilesScreen> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<FetchFolderItemsViewModel>().loadFolder(
-        AppConstants.defaultStoragePath,
-      );
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Consumer<FetchFolderItemsViewModel>(
@@ -83,7 +74,7 @@ class _SelectFilesScreenState extends State<SelectFilesScreen> {
                 child: TabBarView(
                   children: [
                     DocumentsTab(),
-                    Center(child: Text('Installed apps content')),
+                    InstalledAppsTab(),
                     InstalledAppsTab(),
                   ],
                 ),

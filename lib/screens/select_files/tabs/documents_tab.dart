@@ -5,8 +5,25 @@ import 'package:ripple/viewmodels/fetch_folder_items_viewmodel.dart';
 import 'package:ripple/widgets/file_system_item_tile.dart';
 import 'package:ripple/widgets/path_breadcrumb.dart';
 
-class DocumentsTab extends StatelessWidget {
+import '../../../core/constants/app_constants.dart';
+
+class DocumentsTab extends StatefulWidget {
   const DocumentsTab({super.key});
+
+  @override
+  State<DocumentsTab> createState() => _DocumentsTabState();
+}
+
+class _DocumentsTabState extends State<DocumentsTab> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<FetchFolderItemsViewModel>().loadFolder(
+        AppConstants.defaultStoragePath,
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

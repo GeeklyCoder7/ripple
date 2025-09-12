@@ -8,7 +8,7 @@ class FetchFolderItemsViewModel extends ChangeNotifier {
   bool isLoading = false;
   List<FileSystemItem> folderContentsList = [];
   String? currentPath;
-  FetchFolderItemsService selectFilesService = FetchFolderItemsService();
+  FetchFolderItemsService fetchFilesService = FetchFolderItemsService();
 
   // Method to fetch and load current folder items
   Future<void> loadFolder(String path) async {
@@ -17,7 +17,7 @@ class FetchFolderItemsViewModel extends ChangeNotifier {
       notifyListeners();
       folderContentsList.clear();
       currentPath = path;
-      folderContentsList = await selectFilesService.getFolderContents(path);
+      folderContentsList = await fetchFilesService.getFolderContents(path);
     } catch (e) {
       if (kDebugMode) {
         print("Error loading folder contents through viewmodel class: $e");
