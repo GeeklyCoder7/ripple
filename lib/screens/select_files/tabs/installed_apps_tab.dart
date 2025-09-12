@@ -35,7 +35,7 @@ class _InstalledAppsTabState extends State<InstalledAppsTab> {
     });
 
     try {
-      final apps = await _apkService.getInstalledApps(includeIcons: true);
+      final apps = await _apkService.fetchInstalledApps(includeIcons: true);
 
       // ✅ Check if widget is still mounted before calling setState
       if (mounted) {
@@ -52,7 +52,6 @@ class _InstalledAppsTabState extends State<InstalledAppsTab> {
         }
       }
     } catch (e) {
-
       print('❌ Error loading APKs: $e');
       if (mounted) {
         setState(() {

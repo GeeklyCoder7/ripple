@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:ripple/core/constants/app_constants.dart';
+import 'package:ripple/models/apk_item.dart';
 import 'package:ripple/models/file_item.dart';
 import 'package:ripple/models/file_system_item.dart';
 import 'package:ripple/models/folder_item.dart';
@@ -24,9 +25,26 @@ class FetchFolderItemsService {
       }
       await for (FileSystemEntity folderItem in directory.list()) {
         if (folderItem is File) {
-          FileItem item = FileItem.fromFile(folderItem);
-          folderContentsList.add(item);
+          // The folder item is a file
+          FileItem fileItem = FileItem.fromFile(folderItem);
+
+          // Check if the file is an apk
+          if (AppConstants.allowedApkExtensions.contains(
+            fileItem.fileExtension,
+          )) {
+            // The file is an apk file
+            ApkItem apkItem = ApkItem.fromApkFile(
+              fileName: fileItem.itemName,
+              filePath: fileItem.itemPath,
+              sizeBytes: fileItem.fileSizeBytes,
+            );
+            folderContentsList.add(apkItem);
+          } else {
+            // The item is normal file item
+            folderContentsList.add(fileItem);
+          }
         } else if (folderItem is Directory) {
+          // The folder item is again a folder
           if (restrictedPaths.contains(folderItem.path)) {
             continue;
           }
@@ -42,20 +60,17 @@ class FetchFolderItemsService {
       }
       // Sort the list as folders first and that too in alphabetical order and then files
       folderContentsList.sort((a, b) {
-        // a is for folders and b is for files so ensuring that folder comes before files
-        if (a is FolderItem && b is FileItem) return -1;
-        if (a is FileItem && b is FolderItem) return 1;
+        // folders come before files
+        if (a is FolderItem && b is! FolderItem) return -1;
+        if (a is! FolderItem && b is FolderItem) return 1;
 
-        // If both are folders sort by name
+        // if both are folders, sort by name
         if (a is FolderItem && b is FolderItem) {
           return a.itemName.toLowerCase().compareTo(b.itemName.toLowerCase());
         }
 
-        // If both are files sort by name
-        if (a is FileItem && b is FileItem) {
-          return a.itemName.toLowerCase().compareTo(b.itemName.toLowerCase());
-        }
-        return 0;
+        // If both are files (FileItem or ApkItem), sort by name
+        return a.itemName.toLowerCase().compareTo(b.itemName.toLowerCase());
       });
     } catch (e) {
       if (kDebugMode) {

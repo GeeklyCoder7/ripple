@@ -7,7 +7,7 @@ import '../models/apk_item.dart';
 
 class FetchApkService {
   // Method to fetch the installed apps
-  Future<List<ApkItem>> getInstalledApps({bool includeIcons = true}) async {
+  Future<List<ApkItem>> fetchInstalledApps({bool includeIcons = true}) async {
     List<ApkItem> installedApps = [];
     try {
       List<Application> apps = await DeviceApps.getInstalledApplications(
