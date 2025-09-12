@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ripple/core/constants/app_constants.dart';
+import 'package:ripple/screens/select_files/tabs/installed_apps_tab.dart';
 import 'package:ripple/screens/select_files/tabs/documents_tab.dart';
 import 'package:ripple/viewmodels/fetch_folder_items_viewmodel.dart';
 
@@ -83,7 +84,7 @@ class _SelectFilesScreenState extends State<SelectFilesScreen> {
                   children: [
                     DocumentsTab(),
                     Center(child: Text('Installed apps content')),
-                    Center(child: Text('Media content')),
+                    InstalledAppsTab(),
                   ],
                 ),
               ),
