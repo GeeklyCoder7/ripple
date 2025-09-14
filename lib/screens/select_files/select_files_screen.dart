@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:ripple/core/constants/app_constants.dart';
 import 'package:ripple/screens/select_files/tabs/installed_apps_tab.dart';
 import 'package:ripple/screens/select_files/tabs/documents_tab.dart';
+import 'package:ripple/screens/select_files/tabs/media_tab.dart';
 import 'package:ripple/viewmodels/fetch_apk_viewmodel.dart';
 import 'package:ripple/viewmodels/fetch_folder_items_viewmodel.dart';
 
@@ -74,7 +75,7 @@ class _SelectFilesScreenState extends State<SelectFilesScreen> {
                 child: TabBarView(
                   children: [
                     DocumentsTab(),
-                    InstalledAppsTab(),
+                    MediaTab(),
                     InstalledAppsTab(),
                   ],
                 ),

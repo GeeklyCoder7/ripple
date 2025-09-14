@@ -45,6 +45,7 @@ class AppConstants {
   static const double borderRadiusSmall = 10.0;
   static const double borderRadiusExtraSmall = 5.0;
 
+  static const double fontSizeXSmall = 13.0;
   static const double fontSizeSmall = 16.0;
   static const double fontSizeMedium = 20.0;
   static const double fontSizeLarge = 24.0;

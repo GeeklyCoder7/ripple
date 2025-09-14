@@ -4,6 +4,7 @@ import 'package:ripple/screens/home/home_screen.dart';
 import 'package:ripple/screens/select_files/select_files_screen.dart';
 import 'package:ripple/screens/splash/splash_screen.dart';
 import 'package:ripple/viewmodels/fetch_apk_viewmodel.dart';
+import 'package:ripple/viewmodels/fetch_media_items_viewmodel.dart';
 import 'package:ripple/viewmodels/permission_viewmodel.dart';
 import 'package:ripple/viewmodels/fetch_folder_items_viewmodel.dart';
 
@@ -16,6 +17,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => PermissionViewModel()),
         ChangeNotifierProvider(create: (_) => FetchFolderItemsViewModel()),
         ChangeNotifierProvider(create: (_) => FetchApkViewModel()),
+        ChangeNotifierProvider(create: (_) => FetchMediaItemsViewModel()),
       ],
       child: const MyApp(),
     ),
