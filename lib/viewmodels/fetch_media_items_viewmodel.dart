@@ -34,14 +34,9 @@ class FetchMediaItemsViewModel extends ChangeNotifier {
       _errorMessage = null;
       notifyListeners();
       _mediaFoldersList.clear();
-      print('🔍 Starting to load media folders for ${selectedMediaType.name}');
       _mediaFoldersList = await _fetchMediaService.getFoldersWithMedia(
         selectedMediaType,
       );
-      print('📁 Found ${_mediaFoldersList.length} folders'); // Debug
-      for (var folder in _mediaFoldersList) {
-        print('  - ${folder.itemName} (${folder.itemCount} items)'); // Debug
-      }
     } catch (e) {
       if (kDebugMode) {
         _errorMessage =
