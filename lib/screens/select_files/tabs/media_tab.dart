@@ -7,6 +7,7 @@ import 'package:ripple/core/constants/app_colors.dart';
 import 'package:ripple/core/constants/app_constants.dart';
 import 'package:ripple/models/file_item.dart';
 import 'package:ripple/services/fetch_media_service.dart';
+import 'package:ripple/services/selection_manager_service.dart';
 import 'package:ripple/viewmodels/fetch_media_items_viewmodel.dart';
 import 'dart:typed_data';
 
@@ -19,7 +20,11 @@ class MediaTab extends StatefulWidget {
   State<MediaTab> createState() => _MediaTabState();
 }
 
-class _MediaTabState extends State<MediaTab> {
+class _MediaTabState extends State<MediaTab>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   @override
   void initState() {
     super.initState();
@@ -30,21 +35,39 @@ class _MediaTabState extends State<MediaTab> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<FetchMediaItemsViewModel>(
-      builder: (context, viewmodel, child) {
-        return Column(
-          children: [
-            // Media options buttons
-            Padding(
-              padding: EdgeInsets.all(AppConstants.paddingMedium),
-              child: _buildMediaTypesSegmentedButtons(viewmodel),
-            ),
+    super.build(context);
 
-            // Remaining content
-            Expanded(child: _buildContent(viewmodel)),
-          ],
-        );
-      },
+    return Consumer2<FetchMediaItemsViewModel, SelectionManagerService>(
+      builder:
+          (context, fetchMediaViewModel, selectionManagerViewModel, child) {
+            if (fetchMediaViewModel.hasFoldersData) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                selectionManagerViewModel.syncSelectionState(
+                  fetchMediaViewModel.mediaFolders,
+                );
+              });
+            }
+
+            if (fetchMediaViewModel.hasFilesData) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                selectionManagerViewModel.syncSelectionState(
+                  fetchMediaViewModel.mediaFiles,
+                );
+              });
+            }
+            return Column(
+              children: [
+                // Media options buttons
+                Padding(
+                  padding: EdgeInsets.all(AppConstants.paddingMedium),
+                  child: _buildMediaTypesSegmentedButtons(fetchMediaViewModel),
+                ),
+
+                // Remaining content
+                Expanded(child: _buildContent(fetchMediaViewModel)),
+              ],
+            );
+          },
     );
   }
 
@@ -266,31 +289,88 @@ class _MediaTabState extends State<MediaTab> {
             itemCount: viewmodel.mediaFiles.length,
             itemBuilder: (context, index) {
               final file = viewmodel.mediaFiles[index];
-              return Card(
-                elevation: 1,
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: ClipRRect(
-                        borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(4),
-                        ),
-                        child: _buildMediaPreview(
-                          file,
-                          viewmodel.selectedMediaType,
-                        ),
+              return GestureDetector(
+                onTap: () {
+                  context.read<SelectionManagerService>().toggleSelection(file);
+                },
+                child: Consumer<SelectionManagerService>(
+                  builder: (context, selectionManagerService, child) {
+                    bool isSelected = selectionManagerService.isSelected(file);
+                    return Container(
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? AppColors.waveBlue.withOpacity(0.2)
+                            : Colors.grey[300],
+                        border: isSelected
+                            ? Border.all(color: AppColors.waveBlue, width: 1.0)
+                            : null,
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Text(
-                        file.itemName,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontSize: 10),
+                      child: Stack(
+                        children: [
+                          Column(
+                            children: [
+                              Expanded(
+                                child: _buildMediaPreview(
+                                  file,
+                                  viewmodel.selectedMediaType,
+                                ),
+                              ),
+                              Container(
+                                color: isSelected
+                                    ? AppColors.waveBlue.withOpacity(0.1)
+                                    : Colors.grey[300],
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  file.itemName,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: isSelected
+                                        ? FontWeight.w600
+                                        : FontWeight.normal,
+                                    color: isSelected
+                                        ? AppColors.waveBlue
+                                        : Colors.black,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          // Selection indicator overlay
+                          if (isSelected)
+                            Positioned(
+                              top: 4,
+                              right: 4,
+                              child: Container(
+                                width: 24,
+                                height: 24,
+                                decoration: BoxDecoration(
+                                  color: AppColors.waveBlue,
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: Colors.white,
+                                    width: 2,
+                                  ),
+                                ),
+                                child: const Icon(
+                                  Icons.check,
+                                  color: Colors.white,
+                                  size: 14,
+                                ),
+                              ),
+                            ),
+                          // Semi-transparent overlay when selected
+                          if (isSelected)
+                            Positioned.fill(
+                              child: Container(
+                                color: AppColors.waveBlue.withOpacity(0.1),
+                              ),
+                            ),
+                        ],
                       ),
-                    ),
-                  ],
+                    );
+                  },
                 ),
               );
             },

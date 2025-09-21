@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+import 'package:ripple/widgets/installed_app_card.dart';
 import '../../../viewmodels/fetch_apk_viewmodel.dart';
 
 class InstalledAppsTab extends StatefulWidget {
@@ -10,7 +11,11 @@ class InstalledAppsTab extends StatefulWidget {
   State<InstalledAppsTab> createState() => _InstalledAppsTabState();
 }
 
-class _InstalledAppsTabState extends State<InstalledAppsTab> {
+class _InstalledAppsTabState extends State<InstalledAppsTab>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   @override
   void initState() {
     super.initState();
@@ -21,6 +26,7 @@ class _InstalledAppsTabState extends State<InstalledAppsTab> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Consumer<FetchApkViewModel>(
       builder: (context, viewModel, child) {
         if (viewModel.isLoading) {
@@ -44,17 +50,18 @@ class _InstalledAppsTabState extends State<InstalledAppsTab> {
           return const Center(child: Text('No apps found'));
         }
 
-        return ListView.builder(
+        return GridView.builder(
+          padding: const EdgeInsets.all(8.0),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 4,
+            crossAxisSpacing: 8,
+            mainAxisSpacing: 8,
+            childAspectRatio: 0.8,
+          ),
           itemCount: viewModel.installedApps.length,
           itemBuilder: (context, index) {
             final app = viewModel.installedApps[index];
-            return ListTile(
-              leading: app.iconBytes != null
-                  ? Image.memory(app.iconBytes!, width: 40, height: 40)
-                  : const Icon(Icons.android),
-              title: Text(app.displayName),
-              subtitle: Text(app.versionName ?? ''),
-            );
+            return InstalledAppCard(item: app);
           },
         );
       },

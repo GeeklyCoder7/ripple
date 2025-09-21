@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:ripple/screens/home/home_screen.dart';
 import 'package:ripple/screens/select_files/select_files_screen.dart';
 import 'package:ripple/screens/splash/splash_screen.dart';
+import 'package:ripple/services/selection_manager_service.dart';
 import 'package:ripple/viewmodels/fetch_apk_viewmodel.dart';
 import 'package:ripple/viewmodels/fetch_media_items_viewmodel.dart';
 import 'package:ripple/viewmodels/permission_viewmodel.dart';
@@ -18,6 +19,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => FetchFolderItemsViewModel()),
         ChangeNotifierProvider(create: (_) => FetchApkViewModel()),
         ChangeNotifierProvider(create: (_) => FetchMediaItemsViewModel()),
+        ChangeNotifierProvider(create: (_) => SelectionManagerService()),
       ],
       child: const MyApp(),
     ),

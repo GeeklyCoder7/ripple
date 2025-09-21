@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:ripple/core/constants/app_colors.dart';
 import 'package:ripple/core/constants/app_constants.dart';
 import 'package:ripple/models/apk_item.dart';
 import 'package:ripple/models/file_item.dart';
 import 'package:ripple/models/file_system_item.dart';
 import 'package:ripple/models/folder_item.dart';
+import 'package:ripple/services/selection_manager_service.dart';
 
 class FileSystemItemTile extends StatefulWidget {
   final FileSystemItem item;
@@ -41,65 +43,77 @@ class _FileSystemItemTileState extends State<FileSystemItemTile> {
       iconColor = AppConstants.getColorFromFileType(FileType.unknown);
     }
 
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(
-          AppConstants.borderRadiusExtraSmall,
-        ),
-      ),
-      child: InkWell(
-        onTap: widget.onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(AppConstants.paddingMedium),
-          child: Row(
-            children: [
-              // Item icon (either folder or file)
-              Icon(
-                iconData,
-                color: iconColor,
-                size: AppConstants.iconSizeMedium,
-              ),
+    return Consumer<SelectionManagerService>(
+      builder: (context, viewmodel, child) {
+        bool isCurrentlySelected = viewmodel.isSelected(widget.item);
 
-              // Item name and size column
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Item name text
-                    Text(
-                      widget.item.displayName,
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: AppConstants.fontSizeSmall,
-                        fontWeight: FontWeight.w600,
+        return Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(
+              AppConstants.borderRadiusExtraSmall,
+            ),
+          ),
+          child: InkWell(
+            onTap: () {
+              if (widget.item.isFile || widget.item is ApkItem) {
+                viewmodel.toggleSelection(widget.item);
+              } else {
+                widget.onTap?.call();
+              }
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(AppConstants.paddingMedium),
+              child: Row(
+                children: [
+                  // Display selection checkbox on condition
+                  if (viewmodel.hasSelection && !widget.item.isFolder)
+                    Container(
+                      margin: const EdgeInsets.only(right: 12),
+                      child: Icon(
+                        isCurrentlySelected
+                            ? Icons.check_circle
+                            : Icons.radio_button_unchecked,
+                        color: Colors.blue,
+                        size: 20,
                       ),
                     ),
 
-                    // Item size text
-                    _buildSubtitleText(),
-                  ],
-                ),
-              ),
-
-              // Item selected checkbox
-              Checkbox(
-                value: checkState,
-                onChanged: (_) {
-                  setState(() {
-                    checkState = !checkState!;
-                  });
-                },
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(
-                    AppConstants.borderRadiusLarge,
+                  // Item icon (either folder or file)
+                  Icon(
+                    iconData,
+                    color: iconColor,
+                    size: AppConstants.iconSizeMedium,
                   ),
-                ),
+
+                  // Item name and size column
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Item name text
+                        Text(
+                          widget.item.displayName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: AppConstants.fontSizeSmall,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+
+                        // Item size text
+                        _buildSubtitleText(),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 

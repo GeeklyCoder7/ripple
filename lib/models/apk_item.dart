@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:ripple/models/file_system_item.dart';
+import 'package:ripple/services/app_size_service.dart';
 
 enum ApkSource { installed, file }
 
@@ -12,7 +13,7 @@ class ApkItem extends FileSystemItem {
   final ApkSource apkSource;
   final Uint8List? iconBytes;
 
-  const ApkItem({
+  ApkItem({
     // FileSystemItem fields
     required super.itemName, // used for displaying the app name
     required super.itemPath, // '' for installed app and absolute path for the file
@@ -42,13 +43,20 @@ class ApkItem extends FileSystemItem {
   }
 
   // Factory method for creating apk item from installed apk
-  factory ApkItem.fromInstalled({
+  static Future<ApkItem> createFromInstalled({
     required String appLabel,
     required String packageName,
     String? versionName,
     int? versionCode,
     Uint8List? iconBytes,
-  }) {
+  }) async {
+    // Trying to get the APK file size
+    int? apkSize;
+    try {
+      apkSize = await AppSizeService.getApkFileSize(packageName);
+    } catch (e) {
+      print('Could not get APK size for $packageName: $e');
+    }
     return ApkItem(
       itemName: appLabel,
       itemPath: '', // Because installed app doesn't have any path
@@ -58,7 +66,7 @@ class ApkItem extends FileSystemItem {
       versionName: versionName,
       versionCode: versionCode,
       iconBytes: iconBytes,
-      sizeBytes: null,
+      sizeBytes: apkSize,
     );
   }
 
