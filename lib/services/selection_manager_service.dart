@@ -35,7 +35,7 @@ class SelectionManagerService extends ChangeNotifier {
         _selectedItemsList.removeWhere((selected) => selected == item);
       } else {
         _selectedItemsList.removeWhere(
-              (selected) => selected.itemPath == item.itemPath,
+          (selected) => selected.itemPath == item.itemPath,
         );
       }
       item.isSelected = false;

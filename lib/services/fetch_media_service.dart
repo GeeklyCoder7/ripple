@@ -101,7 +101,7 @@ class FetchMediaService {
             itemName: _getFolderNameInIsolate(directory.path),
             itemPath: directory.path,
             itemCount: mediaCount,
-            isAccessible: _isAccessibleInIsolate(directory),
+            isAccessible: await _isAccessibleInIsolate(directory),
           ),
         );
 
@@ -168,9 +168,9 @@ class FetchMediaService {
   }
 
   // Helper method to check if the folder is accessible
-  static bool _isAccessibleInIsolate(Directory directoryToCheck) {
+  static Future<bool> _isAccessibleInIsolate(Directory directoryToCheck) async {
     try {
-      directoryToCheck.listSync();
+      await directoryToCheck.list().isEmpty;
       return true;
     } catch (e) {
       if (kDebugMode) {
@@ -250,7 +250,7 @@ class FetchMediaService {
     }
   }
 
-  // Extracts folder name from path in isolate
+  // Extracts folder name from path in isolate background
   static String _getFolderNameInIsolate(String folderPath) {
     return folderPath.split('/').last;
   }

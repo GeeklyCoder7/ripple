@@ -143,7 +143,9 @@ class _SelectionBottomBarState extends State<SelectionBottomBar>
 
                 // Send button
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/qr_scanner');
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.cyanSplash,
                     padding: const EdgeInsets.symmetric(

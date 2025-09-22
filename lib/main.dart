@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ripple/screens/home/home_screen.dart';
+import 'package:ripple/screens/qr_scanner/qr_scanner_screen.dart';
 import 'package:ripple/screens/select_files/select_files_screen.dart';
 import 'package:ripple/screens/splash/splash_screen.dart';
 import 'package:ripple/services/selection_manager_service.dart';
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => const SplashWavesMoving(),
         '/home': (context) => const HomeScreen(),
         '/select_files': (context) => const SelectFilesScreen(),
+        '/qr_scanner': (context) => const QrScannerScreen(),
       },
     );
   }
